@@ -1,0 +1,73 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbdtb1dhuxchq"]
+
+[sub_resource type="GDScript" id="GDScript_c11dc"]
+script/source = "extends Node2D
+
+@onready var player: CharacterBody2D = $\"..\"
+
+var is_linked : bool = false
+
+# Переменные для хранения связей
+var linked_property_object = null
+var linked_movement_object = null
+var linked_state_object = null
+
+var previous_position = Vector2.ZERO
+
+# Связь с типами объектов
+enum LinkType { PROPERTY, MOVEMENT, STATE }
+
+# Связывание объекта
+func link_object(target: Node2D, link_type: LinkType):
+	match link_type:
+		LinkType.PROPERTY:
+			linked_property_object = target
+		LinkType.MOVEMENT:
+			linked_movement_object = target
+			previous_position = linked_movement_object.global_position
+		LinkType.STATE:
+			linked_state_object = target
+	is_linked = true
+	print(\"Linked: \", target.name, \" with type: \", link_type)
+
+# Отмена связи
+func unlink_object(link_type: LinkType):
+	match link_type:
+		LinkType.PROPERTY:
+			linked_property_object = null
+		LinkType.MOVEMENT:
+			linked_movement_object = null
+		LinkType.STATE:
+			linked_state_object = null
+	is_linked = false
+	print(\"Unlinked type\", link_type)
+
+# Управление связями
+func apply_links(delta):
+	if linked_movement_object:
+		apply_movement_link(delta)
+	if linked_property_object:
+		apply_property_link()
+	if linked_state_object:
+		apply_state_link()
+
+func apply_movement_link(delta):
+	if linked_movement_object:
+		var movement_delta = linked_movement_object.position - previous_position
+		player.position += movement_delta
+		previous_position = linked_movement_object.position
+		print(movement_delta)
+
+func apply_property_link():
+	if linked_property_object:
+		# Копируем, например, массу или фрикцию объекта
+		player.set(\"physics_layer\", linked_property_object.get(\"physics_layer\"))
+
+func apply_state_link():
+	if linked_state_object:
+		# Пример изменения состояния: активность
+		player.visible = linked_state_object.is_visible()
+"
+
+[node name="LinkManager" type="Node2D"]
+script = SubResource("GDScript_c11dc")
