@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://bgk0nfw0rqv2a"]
+
+[ext_resource type="Script" path="res://scripts/hook.gd" id="1_nwlpf"]
+[ext_resource type="Texture2D" uid="uid://bbalbokunmwl6" path="res://assets/sprites/Chain.png" id="2_dbyju"]
+
+[node name="Hook" type="Node2D"]
+script = ExtResource("1_nwlpf")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_repeat = 2
+position = Vector2(7, 2.84217e-14)
+rotation = 1.5708
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_dbyju")
+region_enabled = true
+region_rect = Rect2(60, 10, 30, 140)
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+rotation = -1.5708
