@@ -1,8 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://bfxr7e2lvjp8y"]
+[gd_scene load_steps=11 format=3 uid="uid://bfxr7e2lvjp8y"]
 
 [ext_resource type="Script" path="res://scripts/slime.gd" id="1_86w04"]
 [ext_resource type="Texture2D" uid="uid://bl53gpvg5mh1y" path="res://assets/sprites/slime_green.png" id="1_m86nq"]
 [ext_resource type="PackedScene" uid="uid://c1ofc74j6uhb3" path="res://scenes/killzone.tscn" id="2_b0jho"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_moki4"]
+size = Vector2(12, 9)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y8dg1"]
 atlas = ExtResource("1_m86nq")
@@ -40,11 +43,18 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_lh6wl"]
-size = Vector2(10, 12)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l5odw"]
+size = Vector2(14, 13)
 
-[node name="Slime" type="Node2D"]
+[node name="Slime" type="Area2D" groups=["Enemy"]]
 script = ExtResource("1_86w04")
+metadata/movebale = true
+
+[node name="Killzone" parent="." instance=ExtResource("2_b0jho")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
+position = Vector2(0, -4.5)
+shape = SubResource("RectangleShape2D_moki4")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
@@ -54,11 +64,9 @@ autoplay = "idle"
 frame = 3
 frame_progress = 0.268098
 
-[node name="Killzone" parent="." instance=ExtResource("2_b0jho")]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
-position = Vector2(0, -6)
-shape = SubResource("RectangleShape2D_lh6wl")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -6.5)
+shape = SubResource("RectangleShape2D_l5odw")
 
 [node name="RayCastRight" type="RayCast2D" parent="."]
 position = Vector2(0, -6)
@@ -67,3 +75,5 @@ target_position = Vector2(8, 0)
 [node name="RayCastLeft" type="RayCast2D" parent="."]
 position = Vector2(0, -6)
 target_position = Vector2(-8, 0)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
