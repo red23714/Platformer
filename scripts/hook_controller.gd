@@ -1,11 +1,14 @@
 extends Node2D
 
-@export var rest_length: float = 2.0
-@export var stifness: float = 25.0
-@export var damping: float = 2.0
+@export var rest_length: float = 1.0
+@export var stifness: float = 50.0
+@export var damping: float = 10.0
 
 @onready var player := get_parent()
-@onready var ray_cast: RayCast2D = $RayCast2D
+@onready var sprite: Sprite2D = $Sprite2D
+@onready var ray_cast_main: RayCast2D = $RayCastMain
+@onready var ray_cast_right: RayCast2D = $RayCastRight
+@onready var ray_cast_left: RayCast2D = $RayCastLeft
 @onready var line: Line2D = $Line2D
 
 var launched: bool = false
@@ -13,7 +16,9 @@ var target: Vector2
 var target_obj: Object
 
 func _process(delta: float) -> void:
-	ray_cast.look_at(get_global_mouse_position())
+	ray_cast_main.look_at(get_global_mouse_position())
+	ray_cast_right.look_at(get_global_mouse_position())
+	ray_cast_left.look_at(get_global_mouse_position())
 	
 	if Input.is_action_just_pressed("hook"):
 		launch()
@@ -24,23 +29,35 @@ func _process(delta: float) -> void:
 		handle_hook(delta)
 
 func launch():
-	if ray_cast.is_colliding():
+	var raycast_coliding : RayCast2D
+	if ray_cast_main.is_colliding():
+		raycast_coliding = ray_cast_main
+	elif ray_cast_right.is_colliding():
+		raycast_coliding = ray_cast_right
+	elif ray_cast_left.is_colliding():
+		raycast_coliding = ray_cast_left
+	
+	if raycast_coliding:
 		launched = true
-		target_obj = ray_cast.get_collider()
-		target = ray_cast.get_collision_point()
+		target_obj = raycast_coliding.get_collider()
+		target = raycast_coliding.get_collision_point()
 		line.show()
+		sprite.show()
+		player.acceleration = 0.1
 		player.deceleration = 0.1
 
 func retract():
 	launched = false
 	line.hide()
+	sprite.hide()
 	target_obj = null
 	target = Vector2.ZERO
+	player.acceleration = 1.0
 	player.deceleration = 1.0
 
 func handle_hook(delta):
-	if target_obj.is_in_group("Enemy"):
-		delta *= 2
+	if target_obj.is_in_group("Enemy") || target_obj.is_in_group("Collectables"):
+		delta *= 4
 	if target_obj.has_meta("movebale") and target_obj.get_meta("movebale"):
 		target.x = target_obj.position.x
 	var target_dir: Vector2 = player.global_position.direction_to(target) # Получаем нормированный вектор от игрока до цели
@@ -64,3 +81,9 @@ func handle_hook(delta):
 	
 func update_rope():
 	line.set_point_position(1, to_local(target))
+	sprite.position = to_local(target)
+	if abs(get_angle_to(target)) > deg_to_rad(90):
+		sprite.flip_v = true
+	else:
+		sprite.flip_v = false
+	sprite.rotation = get_angle_to(target)
