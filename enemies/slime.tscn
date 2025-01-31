@@ -1,7 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://bfxr7e2lvjp8y"]
+[gd_scene load_steps=13 format=3 uid="uid://bfxr7e2lvjp8y"]
 
 [ext_resource type="Script" path="res://enemies/slime.gd" id="1_86w04"]
 [ext_resource type="Texture2D" uid="uid://bl53gpvg5mh1y" path="res://assets/sprites/slime_green.png" id="1_m86nq"]
+[ext_resource type="Script" path="res://enemies/helpers/hit_box.gd" id="3_81dhf"]
+[ext_resource type="Script" path="res://enemies/helpers/hurt_box.gd" id="4_hw81h"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y8dg1"]
 atlas = ExtResource("1_m86nq")
@@ -39,11 +41,18 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_l5odw"]
-size = Vector2(10, 10)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xlmqc"]
+size = Vector2(10, 11)
 
-[node name="Slime" type="Area2D" groups=["Enemy"]]
-collision_mask = 2
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mg123"]
+size = Vector2(16, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ddcic"]
+size = Vector2(14, 13)
+
+[node name="Slime" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 5
 script = ExtResource("1_86w04")
 metadata/movebale = true
 
@@ -55,16 +64,29 @@ autoplay = "idle"
 frame = 3
 frame_progress = 0.268098
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -5)
-shape = SubResource("RectangleShape2D_l5odw")
+[node name="RayCastLeft" type="RayCast2D" parent="."]
+position = Vector2(0, -6)
+target_position = Vector2(-8, 0)
 
 [node name="RayCastRight" type="RayCast2D" parent="."]
 position = Vector2(0, -6)
 target_position = Vector2(8, 0)
 
-[node name="RayCastLeft" type="RayCast2D" parent="."]
-position = Vector2(0, -6)
-target_position = Vector2(-8, 0)
+[node name="HitBox" type="Area2D" parent="."]
+script = ExtResource("3_81dhf")
 
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2(0, -5.5)
+shape = SubResource("RectangleShape2D_xlmqc")
+
+[node name="HurtBox" type="Area2D" parent="." node_paths=PackedStringArray("animated_sprite")]
+script = ExtResource("4_hw81h")
+animated_sprite = NodePath("../AnimatedSprite2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(0, -7)
+shape = SubResource("RectangleShape2D_mg123")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -6.5)
+shape = SubResource("RectangleShape2D_ddcic")

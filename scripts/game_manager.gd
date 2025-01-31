@@ -1,5 +1,7 @@
 extends Node
 
+var player
+
 func reload_scene():
 	call_deferred("_deferred_reload_scene")
 

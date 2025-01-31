@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://fkmcsfh2unaf"]
+[gd_scene load_steps=16 format=4 uid="uid://fkmcsfh2unaf"]
 
 [ext_resource type="TileSet" uid="uid://sfb2wxfx242y" path="res://assets/game.tres" id="1_ekcaa"]
 [ext_resource type="PackedScene" uid="uid://buxcmj5ew8pt6" path="res://scenes/player.tscn" id="2_cuts2"]
@@ -9,7 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://bn082c7gciyx1" path="res://assets/sprites/ui.png" id="7_02u4g"]
 [ext_resource type="Script" path="res://ui/healf_bar.gd" id="7_mm3j1"]
 [ext_resource type="PackedScene" uid="uid://bmqbtbveawnh6" path="res://enemies/fufel.tscn" id="7_psvs0"]
-[ext_resource type="PackedScene" uid="uid://c8tsbwj7ttpej" path="res://enemies/helpers/spawner.tscn" id="10_grvrj"]
 
 [sub_resource type="Animation" id="Animation_5tf35"]
 length = 0.001
@@ -100,7 +99,7 @@ tile_map_data = PackedByteArray("AAAEAAcAAAAGAAAAAAAFAAcAAAAGAAAAAAAGAAcAAAAHAAE
 tile_set = ExtResource("1_ekcaa")
 
 [node name="Player" parent="." instance=ExtResource("2_cuts2")]
-position = Vector2(67, 105)
+position = Vector2(880, -14)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(-1, -7)
@@ -176,6 +175,9 @@ position = Vector2(264, 160)
 [node name="Slime3" parent="Enemies" instance=ExtResource("5_hdc2s")]
 position = Vector2(520, 160)
 
+[node name="Fufel" parent="Enemies" instance=ExtResource("7_psvs0")]
+position = Vector2(821, 37)
+
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="Life" type="Control" parent="UI"]
@@ -193,7 +195,3 @@ offset_bottom = 43.0
 texture = ExtResource("7_02u4g")
 stretch_mode = 1
 script = ExtResource("7_mm3j1")
-
-[node name="Spawner" parent="." instance=ExtResource("10_grvrj")]
-position = Vector2(142, 61)
-enemy = ExtResource("7_psvs0")

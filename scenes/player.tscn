@@ -371,7 +371,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_giohn"]
-size = Vector2(16.375, 28.25)
+size = Vector2(16.375, 19.125)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2jryp"]
 radius = 5.0
@@ -380,14 +380,15 @@ radius = 5.0
 z_index = 5
 collision_layer = 2
 script = ExtResource("1_6nl23")
-jump_time_to_peak = 0.5
-jump_time_to_descent = 0.4
+jump_time_to_peak = 0.4
+jump_time_to_descent = 0.3
 
 [node name="HookController" type="Node2D" parent="."]
 position = Vector2(0, -5)
 script = ExtResource("3_o3axj")
 
 [node name="Sprite2D" type="Sprite2D" parent="HookController"]
+visible = false
 z_index = -6
 position = Vector2(0, 4.76837e-07)
 scale = Vector2(0.05, 0.05)

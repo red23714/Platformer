@@ -4,6 +4,8 @@ extends Node2D
 @export var stifness: float = 50.0
 @export var damping: float = 10.0
 
+@export var down_power: float = 80.0
+
 @onready var player := get_parent()
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var ray_cast_main: RayCast2D = $RayCastMain
@@ -52,14 +54,16 @@ func retract():
 	sprite.hide()
 	target_obj = null
 	target = Vector2.ZERO
+	rest_length = 1.0
+	damping = 10.0
 	player.acceleration = 1.0
 	player.deceleration = 1.0
 
 func handle_hook(delta):
-	if target_obj.is_in_group("Enemy") || target_obj.is_in_group("Collectables"):
+	if target_obj is HurtBox:
 		delta *= 4
-	if target_obj.has_meta("movebale") and target_obj.get_meta("movebale"):
-		target.x = target_obj.position.x
+	if target_obj.has_meta("moveable") && target_obj.get_meta("moveable"):
+		target.x = target_obj.global_position.x
 	var target_dir: Vector2 = player.global_position.direction_to(target) # Получаем нормированный вектор от игрока до цели
 	var target_dist: float = player.global_position.distance_to(target)
 	
@@ -72,11 +76,12 @@ func handle_hook(delta):
 		var spring_force: Vector2 = target_dir * spring_force_magnitude
 		
 		var vel_dot: float = player.velocity.dot(target_dir) # Скалярное произведение
-		var damping: Vector2 = -damping * vel_dot * target_dir
+		var damping_2: Vector2 = -damping * vel_dot * target_dir
 		
-		force = spring_force + damping
-		
-	player.velocity += force * delta
+		force = spring_force + damping_2
+	
+	if rest_length < target_dist:
+		player.velocity += force * delta
 	update_rope()
 	
 func update_rope():
@@ -87,3 +92,9 @@ func update_rope():
 	else:
 		sprite.flip_v = false
 	sprite.rotation = get_angle_to(target)
+	
+func move_down(delta):
+	rest_length += down_power * delta
+func move_up(delta):
+	if rest_length >= 1.0:
+		rest_length -= down_power * delta

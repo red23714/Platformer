@@ -1,0 +1,64 @@
+[gd_scene load_steps=9 format=3 uid="uid://bmqbtbveawnh6"]
+
+[ext_resource type="Script" path="res://enemies/fufel.gd" id="1_30hoi"]
+[ext_resource type="Texture2D" uid="uid://bxltecvvt2fd2" path="res://assets/sprites/fufel.png" id="1_f3txf"]
+[ext_resource type="Script" path="res://enemies/helpers/hit_box.gd" id="3_axk0f"]
+[ext_resource type="Script" path="res://enemies/helpers/hurt_box.gd" id="4_ga1ct"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vwthc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_f3txf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6petw"]
+size = Vector2(8, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fy708"]
+size = Vector2(9, 21)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h6myn"]
+size = Vector2(6, 16)
+
+[node name="Fufel" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_30hoi")
+anger_radius = 100
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_vwthc")
+
+[node name="RayCastDown" type="RayCast2D" parent="."]
+position = Vector2(-4, 0)
+target_position = Vector2(0, 30)
+
+[node name="RayCastLeft" type="RayCast2D" parent="."]
+position = Vector2(0, 5)
+target_position = Vector2(-10, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 2)
+shape = SubResource("RectangleShape2D_6petw")
+
+[node name="HurtBox" type="Area2D" parent="." node_paths=PackedStringArray("animated_sprite")]
+script = ExtResource("4_ga1ct")
+health = 5
+animated_sprite = NodePath("../AnimatedSprite2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(0.5, -0.5)
+shape = SubResource("RectangleShape2D_fy708")
+
+[node name="HitBox" type="Area2D" parent="."]
+script = ExtResource("3_axk0f")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2(1, 2)
+shape = SubResource("RectangleShape2D_h6myn")
