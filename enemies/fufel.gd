@@ -17,7 +17,7 @@ func _physics_process(delta: float) -> void:
 	var distance = GameManager.player.global_position.x - global_position.x
 	var direction = sign(distance)
 	
-	if direction != previous_direction:
+	if direction != previous_direction && direction != 0:
 		scale.x = -scale.y * direction
 		previous_direction = direction
 	
@@ -25,8 +25,11 @@ func _physics_process(delta: float) -> void:
 		if ray_cast_left.is_colliding() && is_on_floor() && abs(distance) >= radius_attack && ray_cast_left.get_collider().get_class() == "TileMapLayer":
 			velocity.y += jump_velocity
 		
-		if abs(distance) >= radius_attack && abs(distance) > 0.5:
+		if abs(distance) >= radius_attack && abs(distance) < anger_radius:
 			velocity.x = direction * speed
+		elif abs(distance) > anger_radius:
+			#print(distance)
+			velocity.x = 0.0
 		else:
 			velocity.x = 0.0
 	else:

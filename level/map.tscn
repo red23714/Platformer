@@ -1,15 +1,16 @@
-[gd_scene load_steps=17 format=4 uid="uid://fkmcsfh2unaf"]
+[gd_scene load_steps=20 format=4 uid="uid://fkmcsfh2unaf"]
 
 [ext_resource type="TileSet" uid="uid://sfb2wxfx242y" path="res://assets/game.tres" id="1_ekcaa"]
 [ext_resource type="PackedScene" uid="uid://buxcmj5ew8pt6" path="res://scenes/player.tscn" id="2_cuts2"]
-[ext_resource type="Script" path="res://scripts/camera.gd" id="3_ffcll"]
+[ext_resource type="Script" uid="uid://c0ksvbjdmyvql" path="res://scripts/camera.gd" id="3_ffcll"]
 [ext_resource type="PackedScene" uid="uid://dd1orf52bkaov" path="res://level/platform.tscn" id="4_rkvy8"]
 [ext_resource type="PackedScene" uid="uid://bfxr7e2lvjp8y" path="res://enemies/slime.tscn" id="5_hdc2s"]
 [ext_resource type="FontFile" uid="uid://dbjl1e6kdxpl6" path="res://assets/fonts/PixelOperator8.ttf" id="6_0e860"]
 [ext_resource type="Texture2D" uid="uid://bn082c7gciyx1" path="res://assets/sprites/ui.png" id="7_02u4g"]
-[ext_resource type="Script" path="res://ui/healf_bar.gd" id="7_mm3j1"]
+[ext_resource type="Script" uid="uid://b4oc7lli2enx7" path="res://ui/healf_bar.gd" id="7_mm3j1"]
 [ext_resource type="PackedScene" uid="uid://bmqbtbveawnh6" path="res://enemies/fufel.tscn" id="7_psvs0"]
-[ext_resource type="PackedScene" uid="uid://c8tsbwj7ttpej" path="res://enemies/helpers/spawner.tscn" id="10_grvrj"]
+[ext_resource type="PackedScene" uid="uid://c8tsbwj7ttpej" path="res://enemies/helpers/spawner.tscn" id="10_qt7gk"]
+[ext_resource type="PackedScene" uid="uid://cra8f2fn8eb8p" path="res://enemies/helpers/hit_box.tscn" id="11_7q82s"]
 
 [sub_resource type="Animation" id="Animation_5tf35"]
 length = 0.001
@@ -45,8 +46,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_cljqx"]
 _data = {
-"RESET": SubResource("Animation_5tf35"),
-"move": SubResource("Animation_wr2r5")
+&"RESET": SubResource("Animation_5tf35"),
+&"move": SubResource("Animation_wr2r5")
 }
 
 [sub_resource type="Animation" id="Animation_3rv57"]
@@ -83,9 +84,14 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0owwy"]
 _data = {
-"RESET": SubResource("Animation_3rv57"),
-"move": SubResource("Animation_0y4vf")
+&"RESET": SubResource("Animation_3rv57"),
+&"move": SubResource("Animation_0y4vf")
 }
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_71h8e"]
+size = Vector2(74, 72)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_tgp7s"]
 
 [node name="Map" type="Node2D"]
 
@@ -100,7 +106,7 @@ tile_map_data = PackedByteArray("AAAEAAcAAAAGAAAAAAAFAAcAAAAGAAAAAAAGAAcAAAAHAAE
 tile_set = ExtResource("1_ekcaa")
 
 [node name="Player" parent="." instance=ExtResource("2_cuts2")]
-position = Vector2(67, 105)
+position = Vector2(98, 93)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(-1, -7)
@@ -115,7 +121,7 @@ moveable = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Platforms/Platform"]
 libraries = {
-"": SubResource("AnimationLibrary_cljqx")
+&"": SubResource("AnimationLibrary_cljqx")
 }
 autoplay = "move"
 
@@ -126,7 +132,7 @@ moveable = true
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Platforms/Platform2"]
 root_node = NodePath("../../..")
 libraries = {
-"": SubResource("AnimationLibrary_0owwy")
+&"": SubResource("AnimationLibrary_0owwy")
 }
 autoplay = "move"
 
@@ -176,6 +182,9 @@ position = Vector2(264, 160)
 [node name="Slime3" parent="Enemies" instance=ExtResource("5_hdc2s")]
 position = Vector2(520, 160)
 
+[node name="Fufel" parent="Enemies" instance=ExtResource("7_psvs0")]
+position = Vector2(819, 6)
+
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="Life" type="Control" parent="UI"]
@@ -194,6 +203,19 @@ texture = ExtResource("7_02u4g")
 stretch_mode = 1
 script = ExtResource("7_mm3j1")
 
-[node name="Spawner" parent="." instance=ExtResource("10_grvrj")]
-position = Vector2(142, 61)
+[node name="Spawner" parent="." instance=ExtResource("10_qt7gk")]
+position = Vector2(156, 47)
+max_enemy = 2
 enemy = ExtResource("7_psvs0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spawner"]
+position = Vector2(-4, 29)
+shape = SubResource("RectangleShape2D_71h8e")
+debug_color = Color(0.625364, 0.528926, 0.157946, 0.42)
+
+[node name="HitBox" parent="." instance=ExtResource("11_7q82s")]
+position = Vector2(523, 354)
+damage = -1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource("WorldBoundaryShape2D_tgp7s")

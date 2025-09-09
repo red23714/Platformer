@@ -6,8 +6,6 @@ signal health_changed
 @export var jump_time_to_peak: float = 0.5
 @export var jump_time_to_descent: float = 0.4
 
-@export var hook_down_power: float = 50
-
 @onready var jump_velocity: float = ((2.0 * jump_height) / jump_time_to_peak) * -1.0
 @onready var jump_gravity: float = ((-2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)) * -1.0
 @onready var fall_gravity: float = ((-2.0 * jump_height) / (jump_time_to_descent * jump_time_to_descent)) * -1.0
@@ -31,6 +29,9 @@ func _enter_tree() -> void:
 
 func get_gravity_player() -> float:
 	return jump_gravity if velocity.y < 0.0 else fall_gravity
+
+func kill():
+	GameManager.reload_scene()
 
 func take_damage(amount: float):
 	health -= amount
@@ -87,8 +88,9 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity.x = lerp(velocity.x, 0.0, deceleration)
 		
-		var up_down := Input.get_axis("up", "down")
 		if cheats:
+			var up_down := Input.get_axis("up", "down")
+			velocity.x = direction * SPEED * 3
 			if up_down:
 				velocity.y = up_down * SPEED * 2
 			else:

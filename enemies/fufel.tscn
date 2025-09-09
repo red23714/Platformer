@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=3 uid="uid://bmqbtbveawnh6"]
 
-[ext_resource type="Script" path="res://enemies/fufel.gd" id="1_30hoi"]
+[ext_resource type="Script" uid="uid://dtwc4twi7f5cp" path="res://enemies/fufel.gd" id="1_30hoi"]
 [ext_resource type="Texture2D" uid="uid://bxltecvvt2fd2" path="res://assets/sprites/fufel.png" id="1_f3txf"]
-[ext_resource type="Script" path="res://enemies/helpers/hit_box.gd" id="3_axk0f"]
-[ext_resource type="Script" path="res://enemies/helpers/hurt_box.gd" id="4_ga1ct"]
+[ext_resource type="Script" uid="uid://bdugvdnwjmbm" path="res://enemies/helpers/hit_box.gd" id="3_axk0f"]
+[ext_resource type="Script" uid="uid://dtftw61nbgkm5" path="res://enemies/helpers/hurt_box.gd" id="4_ga1ct"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vwthc"]
 animations = [{
@@ -58,6 +58,7 @@ shape = SubResource("RectangleShape2D_fy708")
 
 [node name="HitBox" type="Area2D" parent="."]
 script = ExtResource("3_axk0f")
+damage = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 position = Vector2(1, 2)

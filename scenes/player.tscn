@@ -1,10 +1,10 @@
 [gd_scene load_steps=35 format=3 uid="uid://buxcmj5ew8pt6"]
 
-[ext_resource type="Script" path="res://scripts/player.gd" id="1_6nl23"]
+[ext_resource type="Script" uid="uid://bmggqmml3acm7" path="res://scripts/player.gd" id="1_6nl23"]
 [ext_resource type="Texture2D" uid="uid://b8cmjj8vq3r8d" path="res://assets/sprites/knight.png" id="1_rgsam"]
 [ext_resource type="Texture2D" uid="uid://f3bsnx287ohi" path="res://assets/sprites/sword.png" id="3_hganx"]
-[ext_resource type="Script" path="res://scripts/hook_controller.gd" id="3_o3axj"]
-[ext_resource type="Script" path="res://scripts/sword.gd" id="3_v0t41"]
+[ext_resource type="Script" uid="uid://bmttebvv5a2ea" path="res://scripts/hook_controller.gd" id="3_o3axj"]
+[ext_resource type="Script" uid="uid://dscl6kvbxpj6" path="res://scripts/sword.gd" id="3_v0t41"]
 [ext_resource type="Texture2D" uid="uid://bl1k1xa6ulhv0" path="res://assets/sprites/hook.png" id="6_0t32k"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_68mnn"]
@@ -365,9 +365,9 @@ tracks/4/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_i3yl2"]
 _data = {
-"RESET": SubResource("Animation_xocai"),
-"attack": SubResource("Animation_wxgha"),
-"attack_left": SubResource("Animation_rv3tt")
+&"RESET": SubResource("Animation_xocai"),
+&"attack": SubResource("Animation_wxgha"),
+&"attack_left": SubResource("Animation_rv3tt")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_giohn"]
@@ -387,7 +387,7 @@ jump_time_to_descent = 0.3
 position = Vector2(0, -5)
 script = ExtResource("3_o3axj")
 
-[node name="Sprite2D" type="Sprite2D" parent="HookController"]
+[node name="HookSprite" type="Sprite2D" parent="HookController"]
 visible = false
 z_index = -6
 position = Vector2(0, 4.76837e-07)
@@ -427,7 +427,7 @@ texture = ExtResource("3_hganx")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sword"]
 libraries = {
-"": SubResource("AnimationLibrary_i3yl2")
+&"": SubResource("AnimationLibrary_i3yl2")
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sword"]

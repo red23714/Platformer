@@ -7,6 +7,7 @@ extends Area2D
 @export var moveable: bool = true
 
 func _ready() -> void:
+	add_to_group("Enemy")
 	set_meta("moveable", moveable)
 
 func take_damage(damage: int):

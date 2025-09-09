@@ -5,9 +5,10 @@ extends Node2D
 @export var damping: float = 10.0
 
 @export var down_power: float = 80.0
+@export var max_down_length: float = 200
 
+@onready var sprite: Sprite2D = $HookSprite
 @onready var player := get_parent()
-@onready var sprite: Sprite2D = $Sprite2D
 @onready var ray_cast_main: RayCast2D = $RayCastMain
 @onready var ray_cast_right: RayCast2D = $RayCastRight
 @onready var ray_cast_left: RayCast2D = $RayCastLeft
@@ -16,11 +17,15 @@ extends Node2D
 var launched: bool = false
 var target: Vector2
 var target_obj: Object
+var show_target_indicator: bool = false
+var target_indicator_pos: Vector2
 
 func _process(delta: float) -> void:
 	ray_cast_main.look_at(get_global_mouse_position())
 	ray_cast_right.look_at(get_global_mouse_position())
 	ray_cast_left.look_at(get_global_mouse_position())
+	
+	update_target_indicator()
 	
 	if Input.is_action_just_pressed("hook"):
 		launch()
@@ -63,7 +68,7 @@ func handle_hook(delta):
 	if target_obj is HurtBox:
 		delta *= 4
 	if target_obj.has_meta("moveable") && target_obj.get_meta("moveable"):
-		target.x = target_obj.global_position.x
+		target = target_obj.global_position
 	var target_dir: Vector2 = player.global_position.direction_to(target) # Получаем нормированный вектор от игрока до цели
 	var target_dist: float = player.global_position.distance_to(target)
 	
@@ -94,7 +99,27 @@ func update_rope():
 	sprite.rotation = get_angle_to(target)
 	
 func move_down(delta):
-	rest_length += down_power * delta
+	if rest_length < max_down_length:
+		rest_length += down_power * delta
 func move_up(delta):
 	if rest_length >= 1.0:
 		rest_length -= down_power * delta
+
+func update_target_indicator():
+	var raycast_coliding: RayCast2D = null
+	
+	if ray_cast_main.is_colliding():
+		raycast_coliding = ray_cast_main
+	elif ray_cast_right.is_colliding():
+		raycast_coliding = ray_cast_right
+	elif ray_cast_left.is_colliding():
+		raycast_coliding = ray_cast_left
+	
+	show_target_indicator = raycast_coliding != null
+	if show_target_indicator:
+		target_indicator_pos = raycast_coliding.get_collision_point()
+	queue_redraw()
+
+func _draw():
+	if show_target_indicator:
+		draw_circle(to_local(target_indicator_pos), 1, Color.RED)
